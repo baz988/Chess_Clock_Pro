@@ -9,32 +9,29 @@ import android.widget.TextView;
 
 public class MainActivity extends Activity {
 
-    TextView textFieldA;
-    GameTimer gameTimerA;
-    long gameStartTime = 10000;
-    long realTime = 0;
-    boolean paused = true;
+    Player playerA;
+    Player classPlayer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        textFieldA = (TextView) findViewById(R.id.textViewA);
-        textFieldA.setText(Long.toString(gameStartTime/1000));
+        playerA = new Player();
 
-        textFieldA.setOnClickListener(new View.OnClickListener() {
+        playerA.textField = (TextView) findViewById(R.id.textViewA);
+        playerA.textField.setText(Long.toString(playerA.gameStartTime/1000));
+
+        playerA.textField.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(paused){
-                    gameTimerA = new GameTimer();
-                    gameTimerA.start();
-                    paused=false;
-                }
-
-                else{ //currently not paused
-                    gameStartTime= gameTimerA.pause();
-                    textFieldA.setText("Clock paused at: " + gameStartTime/1000);
+                if (playerA.isPaused) {
+                    playerA.gameTimer = new GameTimer(playerA);
+                    playerA.gameTimer.start();
+                    playerA.isPaused = false;
+                } else { //currently not paused
+                    playerA.gameStartTime = playerA.gameTimer.pause();
+                    playerA.textField.setText("Clock paused at: " + playerA.gameStartTime / 1000);
                 }
             }
         });
@@ -42,25 +39,35 @@ public class MainActivity extends Activity {
 
     class GameTimer extends CountDownTimer{
 
-        public GameTimer(){
-            super(gameStartTime, 1000);
+        public GameTimer(Player player){
+            super(player.gameStartTime, 1000);
+            classPlayer = player;
         }
 
         @Override
         public void onTick(long millisUntilFinished){
-            realTime = millisUntilFinished;
-            textFieldA.setText(Long.toString(realTime/1000));
+            classPlayer.realTime = millisUntilFinished;
+            classPlayer.textField.setText(Long.toString(classPlayer.realTime / 1000));
         }
 
         @Override
         public void onFinish(){
-            textFieldA.setText("YOU LOSE");
+            classPlayer.textField.setText("YOU LOSE");
         }
 
         public long pause(){
             cancel();
-            paused=true;
-            return realTime;
+            classPlayer.isPaused=true;
+            return classPlayer.realTime;
         }
+    }
+
+    class Player{
+
+        public TextView textField;
+        public GameTimer gameTimer;
+        long gameStartTime= 10000;
+        long realTime = 0;
+        boolean isPaused = true;
     }
 }
