@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.view.View;
-import android.widget.Button;
 import android.widget.TextView;
 
 
@@ -13,48 +12,44 @@ public class MainActivity extends Activity {
     TextView textFieldA;
     GameTimer gameTimerA;
     long gameStartTime = 10000;
-    long realTime;
+    long realTime = 0;
+    boolean paused = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Button startButton = (Button) findViewById(R.id.button);
-        Button pauseButton = (Button) findViewById(R.id.button2);
-
         textFieldA = (TextView) findViewById(R.id.textViewA);
         textFieldA.setText(Long.toString(gameStartTime/1000));
 
-        //gameTimerA = new GameTimer(gameStartTime);
-
-        startButton.setOnClickListener(new View.OnClickListener() {
+        textFieldA.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                gameTimerA = new GameTimer(gameStartTime);
-                gameTimerA.start();
-            }
-        });
+                if(paused){
+                    gameTimerA = new GameTimer();
+                    gameTimerA.start();
+                    paused=false;
+                }
 
-        pauseButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                gameStartTime= gameTimerA.pause();
-                textFieldA.setText("Clock paused at: " + gameStartTime);
+                else{ //currently not paused
+                    gameStartTime= gameTimerA.pause();
+                    textFieldA.setText("Clock paused at: " + gameStartTime/1000);
+                }
             }
         });
     }
 
     class GameTimer extends CountDownTimer{
 
-        public GameTimer(long gameStartTime){
+        public GameTimer(){
             super(gameStartTime, 1000);
         }
 
         @Override
         public void onTick(long millisUntilFinished){
-            realTime = millisUntilFinished/1000;
-            textFieldA.setText(Long.toString(realTime));
+            realTime = millisUntilFinished;
+            textFieldA.setText(Long.toString(realTime/1000));
         }
 
         @Override
@@ -64,6 +59,7 @@ public class MainActivity extends Activity {
 
         public long pause(){
             cancel();
+            paused=true;
             return realTime;
         }
     }
