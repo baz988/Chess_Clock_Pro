@@ -10,6 +10,7 @@ import android.widget.TextView;
 public class MainActivity extends Activity {
 
     Player playerA;
+    Player playerB;
     Player classPlayer;
 
     @Override
@@ -18,9 +19,13 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
 
         playerA = new Player();
+        playerB = new Player();
 
         playerA.textField = (TextView) findViewById(R.id.textViewA);
         playerA.textField.setText(Long.toString(playerA.gameStartTime/1000));
+
+        playerB.textField = (TextView) findViewById(R.id.textViewB);
+        playerB.textField.setText(Long.toString(playerB.gameStartTime/1000));
 
         playerA.textField.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -32,6 +37,20 @@ public class MainActivity extends Activity {
                 } else { //currently not paused
                     playerA.gameStartTime = playerA.gameTimer.pause();
                     playerA.textField.setText("Clock paused at: " + playerA.gameStartTime / 1000);
+                }
+            }
+        });
+
+        playerB.textField.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (playerB.isPaused) {
+                    playerB.gameTimer = new GameTimer(playerB);
+                    playerB.gameTimer.start();
+                    playerB.isPaused = false;
+                } else { //currently not paused
+                    playerB.gameStartTime = playerB.gameTimer.pause();
+                    playerB.textField.setText("Clock paused at: " + playerB.gameStartTime / 1000);
                 }
             }
         });
@@ -69,5 +88,8 @@ public class MainActivity extends Activity {
         long gameStartTime= 10000;
         long realTime = 0;
         boolean isPaused = true;
+        
     }
 }
+
+
