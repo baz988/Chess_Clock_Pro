@@ -11,8 +11,8 @@ public class MainActivity extends Activity {
 
     Player playerA;
     Player playerB;
-    //Player currentPlayer;
-    int INTERVAL = 100;
+    int moveCounter = 0;
+    int INTERVAL = 1000;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,24 +23,20 @@ public class MainActivity extends Activity {
         playerB = new Player();
 
         playerA.textField = (TextView) findViewById(R.id.textViewA);
-        playerA.textField.setText(Long.toString(playerA.gameStartTime/INTERVAL));
-        //playerA.gameTimer = new GameTimer(playerA);
+        playerA.textField.setText(Long.toString(playerA.gameStartTime / INTERVAL));
 
         playerB.textField = (TextView) findViewById(R.id.textViewB);
-        playerB.textField.setText(Long.toString(playerB.gameStartTime/INTERVAL));
-        //playerB.gameTimer = new GameTimer(playerB);
+        playerB.textField.setText(Long.toString(playerB.gameStartTime / INTERVAL));
 
         playerA.textField.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //timerLogic(playerA);
-                if (playerA.isPaused) {
-                    playerA.gameTimer = new GameTimer(playerA);
-                    playerA.gameTimer.start();
-                    playerA.isPaused = false;
-                } else { //currently not paused
-                    playerA.gameStartTime = playerA.gameTimer.pause();
-                    playerA.textField.setText("Clock paused at: " + playerA.gameStartTime / INTERVAL);
+                if (!playerA.isPaused) {
+                    timerLogic(playerB);
+                    if (moveCounter >= 2) {
+                        timerPause(playerA);
+                    }
+                    playerA.isPaused=true;
                 }
             }
         });
@@ -48,29 +44,28 @@ public class MainActivity extends Activity {
         playerB.textField.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //timerLogic(playerB);
-                if (playerB.isPaused) {
-                    playerB.gameTimer = new GameTimer(playerB);
-                    playerB.gameTimer.start();
-                    playerB.isPaused = false;
-                } else { //currently not paused
-                    playerB.gameStartTime = playerB.gameTimer.pause();
-
-                    playerB.textField.setText("Clock paused at: " + playerB.gameStartTime / INTERVAL);
+                if (!playerB.isPaused) {
+                    timerLogic(playerA);
+                    if (moveCounter >= 2) {
+                        timerPause(playerB);
+                    }
+                    playerB.isPaused=true;
                 }
             }
         });
     }
 
     public void timerLogic(Player currentPlayer) {
-        if (currentPlayer.isPaused) {
-            currentPlayer.gameTimer = new GameTimer(currentPlayer);
-            currentPlayer.gameTimer.start();
-            currentPlayer.isPaused = false;
-        } else { //currently not paused
-            currentPlayer.gameStartTime = currentPlayer.gameTimer.pause();
-            currentPlayer.textField.setText("Clock paused at: " + currentPlayer.gameStartTime / INTERVAL);
-        }
+        currentPlayer.gameTimer = new GameTimer(currentPlayer);
+        currentPlayer.gameTimer.start();
+        currentPlayer.isPaused = false;
+
+    }
+
+    public void timerPause(Player currentPlayer){
+
+        currentPlayer.gameStartTime = currentPlayer.gameTimer.pause();
+        currentPlayer.textField.setText("Clock paused at: " + currentPlayer.gameStartTime / INTERVAL);
     }
 
     class GameTimer extends CountDownTimer{
@@ -80,6 +75,7 @@ public class MainActivity extends Activity {
         public GameTimer(Player player){
             super(player.gameStartTime, INTERVAL);
             currentPlayer = player;
+            moveCounter++;
         }
 
         @Override
@@ -106,7 +102,8 @@ public class MainActivity extends Activity {
         public GameTimer gameTimer;
         long gameStartTime= 10000;
         long realTime = 0;
-        boolean isPaused = true;
+        boolean isPaused = false;
+
     }
 }
 
