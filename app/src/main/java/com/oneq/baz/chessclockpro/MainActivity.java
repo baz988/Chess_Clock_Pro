@@ -4,8 +4,8 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.concurrent.TimeUnit;
 
@@ -14,6 +14,8 @@ public class MainActivity extends Activity {
 
     Player playerA;
     Player playerB;
+    Button pauseButton;
+    Button resetButton;
     int moveCounter = 0;
     long TIME_CONTROL = 300000;
     int INTERVAL = 1000;
@@ -26,7 +28,11 @@ public class MainActivity extends Activity {
         playerA = new Player();
         playerB = new Player();
 
-        //Toast.makeText(this, time, Toast.LENGTH_LONG).show();
+        pauseButton = (Button) findViewById(R.id.pauseButton);
+        pauseButton.setVisibility(View.GONE);
+
+        resetButton = (Button) findViewById(R.id.resetButton);
+        resetButton.setVisibility(View.GONE);
 
         playerA.textField = (TextView) findViewById(R.id.textViewA);
         playerA.textField.setText(convertTime(TIME_CONTROL));
@@ -37,12 +43,13 @@ public class MainActivity extends Activity {
         playerA.textField.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                resetButton.setVisibility(View.VISIBLE);
+                pauseButton.setVisibility(View.VISIBLE);
                 if (!playerA.isPaused) {
                     timerLogic(playerB);
                     if (moveCounter >= 2) {
                         timerPause(playerA);
                     }
-                    playerA.isPaused=true;
                 }
             }
         });
@@ -50,15 +57,60 @@ public class MainActivity extends Activity {
         playerB.textField.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                resetButton.setVisibility(View.VISIBLE);
+                pauseButton.setVisibility(View.VISIBLE);
                 if (!playerB.isPaused) {
                     timerLogic(playerA);
                     if (moveCounter >= 2) {
                         timerPause(playerB);
                     }
-                    playerB.isPaused=true;
                 }
             }
         });
+
+        pauseButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                timerPause(playerA);
+                playerA.isPaused=false;
+
+                timerPause(playerB);
+                playerB.isPaused=false;
+
+                resetButton.setVisibility(View.GONE);
+                pauseButton.setVisibility(View.GONE);
+            }
+        });
+
+        resetButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                playerA.realTime = TIME_CONTROL;
+                timerPause(playerA);
+                playerA.isPaused=false;
+
+                playerB.realTime = TIME_CONTROL;
+                timerPause(playerB);
+                playerB.isPaused=false;
+
+                resetButton.setVisibility(View.GONE);
+                pauseButton.setVisibility(View.GONE);
+            }
+        });
+
+    }
+
+    //METHODS
+
+    public void timerLogic(Player currentPlayer) {
+        currentPlayer.gameTimer = new GameTimer(currentPlayer);
+        currentPlayer.gameTimer.start();
+        currentPlayer.isPaused = false;
+    }
+
+    public void timerPause(Player currentPlayer){
+        currentPlayer.gameStartTime = currentPlayer.gameTimer.pause();
+        currentPlayer.textField.setText("" + convertTime(currentPlayer.gameStartTime));
     }
 
     public String convertTime(long time){
@@ -94,16 +146,8 @@ public class MainActivity extends Activity {
         return formatted;
     }
 
-    public void timerLogic(Player currentPlayer) {
-        currentPlayer.gameTimer = new GameTimer(currentPlayer);
-        currentPlayer.gameTimer.start();
-        currentPlayer.isPaused = false;
-    }
 
-    public void timerPause(Player currentPlayer){
-        currentPlayer.gameStartTime = currentPlayer.gameTimer.pause();
-        currentPlayer.textField.setText("" + convertTime(currentPlayer.gameStartTime));
-    }
+    //CLASSES
 
     class GameTimer extends CountDownTimer{
 
