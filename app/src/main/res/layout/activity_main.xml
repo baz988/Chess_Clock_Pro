@@ -24,19 +24,19 @@
         android:orientation="horizontal"
         android:background="@android:color/transparent">
 
-        <Button
+        <ImageButton
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/pauseButton"
-            android:text="@string/pauseButtonText"
+            android:src="@drawable/ic_action_pause"
             android:layout_weight="1"
             android:background="#878787"/>
 
-        <Button
+        <ImageButton
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/resetButtonText"
             android:id="@+id/resetButton"
+            android:src="@drawable/ic_action_replay"
             android:layout_weight="1"
             android:background="#878787"/>
 

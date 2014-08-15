@@ -7,5 +7,6 @@
     <string name="textViewA_text">30</string>
     <string name="pauseButtonText">PAUSE</string>
     <string name="resetButtonText">RESET</string>
+    <string name="outOfTime">OUT OF TIME</string>
 
 </resources>

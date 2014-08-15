@@ -1,10 +1,11 @@
 package com.oneq.baz.chessclockpro;
 
 import android.app.Activity;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.view.View;
-import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import java.util.concurrent.TimeUnit;
@@ -12,89 +13,109 @@ import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends Activity {
 
-    Player playerA;
-    Player playerB;
-    Button pauseButton;
-    Button resetButton;
-    int moveCounter = 0;
+    Player white;
+    Player black;
+    ImageButton pauseButton;
+    ImageButton resetButton;
+    MediaPlayer mediaPlayer;
     long TIME_CONTROL = 300000;
     int INTERVAL = 1000;
+    boolean outOfTime = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        playerA = new Player();
-        playerB = new Player();
+        //setup white player
+        white = new Player();
+        white.gameTimer = new GameTimer(white);
+        white.textField = (TextView) findViewById(R.id.textViewA);
+        white.textField.setText(convertTime(TIME_CONTROL));
 
-        pauseButton = (Button) findViewById(R.id.pauseButton);
-        pauseButton.setVisibility(View.GONE);
+        //setup black player
+        black = new Player();
+        black.gameTimer = new GameTimer(black);
+        black.textField = (TextView) findViewById(R.id.textViewB);
+        black.textField.setText(convertTime(TIME_CONTROL));
 
-        resetButton = (Button) findViewById(R.id.resetButton);
-        resetButton.setVisibility(View.GONE);
 
-        playerA.textField = (TextView) findViewById(R.id.textViewA);
-        playerA.textField.setText(convertTime(TIME_CONTROL));
+        //pause and reset buttons
+        pauseButton = (ImageButton) findViewById(R.id.pauseButton);
+        resetButton = (ImageButton) findViewById(R.id.resetButton);
 
-        playerB.textField = (TextView) findViewById(R.id.textViewB);
-        playerB.textField.setText(convertTime(TIME_CONTROL));
-
-        playerA.textField.setOnClickListener(new View.OnClickListener() {
+        //handle a white click
+        //the .isPaused makes sure the clicked players time is running, and then starts the opponents timer
+        //the move counter is to make sure the other players class has been created and set to the Time_Control
+            //for proper object reference and display
+        white.textField.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                resetButton.setVisibility(View.VISIBLE);
-                pauseButton.setVisibility(View.VISIBLE);
-                if (!playerA.isPaused) {
-                    timerLogic(playerB);
-                    if (moveCounter >= 2) {
-                        timerPause(playerA);
+                if (!white.isPaused) {
+                    timerLogic(black);
+                    if (white.moveCounter >1) {
+                        timerPause(white);
                     }
                 }
             }
         });
 
-        playerB.textField.setOnClickListener(new View.OnClickListener() {
+        //handle a black click
+        //the .isPaused makes sure the clicked players time is running, and then starts the opponents timer
+        //the move counter is to make sure the other players class has been created and set to the Time_Control
+            //for proper object reference and display
+        black.textField.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                resetButton.setVisibility(View.VISIBLE);
-                pauseButton.setVisibility(View.VISIBLE);
-                if (!playerB.isPaused) {
-                    timerLogic(playerA);
-                    if (moveCounter >= 2) {
-                        timerPause(playerB);
+                if (!black.isPaused) {
+                    timerLogic(white);
+                    if (black.moveCounter >1) {
+                        timerPause(black);
                     }
                 }
             }
         });
 
+        //pause button will reset both clocks to whatever time is currently displayed
+        //the move counter is to make sure the clock has been created with the Time_Control for proper object reference and display
         pauseButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                timerPause(playerA);
-                playerA.isPaused=false;
-
-                timerPause(playerB);
-                playerB.isPaused=false;
-
-                resetButton.setVisibility(View.GONE);
-                pauseButton.setVisibility(View.GONE);
+                if (!outOfTime) {
+                    if (white.moveCounter > 1) {
+                        timerPause(white);
+                        white.isPaused = false;
+                    }
+                    if (black.moveCounter > 1) {
+                        timerPause(black);
+                        black.isPaused = false;
+                    }
+                }
             }
         });
 
+        //reset button will set both the clocks to Time_Control
+        /**
+         * Need to add a moveCounter reset
+         */
         resetButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                playerA.realTime = TIME_CONTROL;
-                timerPause(playerA);
-                playerA.isPaused=false;
+                white.realTime = TIME_CONTROL;
+                timerPause(white);
 
-                playerB.realTime = TIME_CONTROL;
-                timerPause(playerB);
-                playerB.isPaused=false;
+                black.realTime = TIME_CONTROL;
+                timerPause(black);
 
-                resetButton.setVisibility(View.GONE);
-                pauseButton.setVisibility(View.GONE);
+                if(outOfTime){
+                    mediaPlayer.release();
+                    mediaPlayer = null;
+                    outOfTime=false;
+                }
+
+                white.isPaused = false;
+                black.isPaused = false;
+
             }
         });
 
@@ -146,7 +167,6 @@ public class MainActivity extends Activity {
         return formatted;
     }
 
-
     //CLASSES
 
     class GameTimer extends CountDownTimer{
@@ -156,7 +176,7 @@ public class MainActivity extends Activity {
         public GameTimer(Player player){
             super(player.gameStartTime, INTERVAL);
             currentPlayer = player;
-            moveCounter++;
+            player.moveCounter++;
         }
 
         @Override
@@ -167,7 +187,13 @@ public class MainActivity extends Activity {
 
         @Override
         public void onFinish(){
-            currentPlayer.textField.setText("OUT OF TIME");
+            currentPlayer.textField.setText(R.string.outOfTime);
+            white.isPaused=true;
+            black.isPaused=true;
+            outOfTime=true;
+
+            mediaPlayer = MediaPlayer.create(MainActivity.this, R.raw.beep3);
+            mediaPlayer.start();
         }
 
         public long pause(){
@@ -183,6 +209,17 @@ public class MainActivity extends Activity {
         long gameStartTime = TIME_CONTROL;
         long realTime = 0;
         boolean isPaused = false;
+        int moveCounter=0;
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+    }
+
+    @Override
+    public void onPause(){
+        super.onPause();
     }
 }
 
