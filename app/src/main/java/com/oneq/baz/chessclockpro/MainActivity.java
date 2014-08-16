@@ -9,6 +9,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import java.util.concurrent.TimeUnit;
 
+
 public class MainActivity extends Activity {
 
     Player white;
