@@ -190,6 +190,7 @@ public class MainActivity extends Activity {
             black.isPaused=true;
             outOfTime=true;
 
+
             mediaPlayer = MediaPlayer.create(MainActivity.this, R.raw.beep3);
             mediaPlayer.start();
         }
