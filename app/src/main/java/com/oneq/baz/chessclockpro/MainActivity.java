@@ -219,6 +219,15 @@ public class MainActivity extends Activity {
     @Override
     public void onPause(){
         super.onPause();
+
+        if (white.moveCounter > 1) {
+            timerPause(white);
+            white.isPaused = false;
+        }
+        if (black.moveCounter > 1) {
+            timerPause(black);
+            black.isPaused = false;
+        }
     }
 }
 
