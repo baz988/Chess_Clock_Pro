@@ -54,6 +54,7 @@ public class MainActivity extends Activity {
                     if (white.moveCounter >1) {
                         timerPause(white);
                     }
+                    white.isPaused=true;
                 }
             }
         });
@@ -70,6 +71,7 @@ public class MainActivity extends Activity {
                     if (black.moveCounter >1) {
                         timerPause(black);
                     }
+                    black.isPaused=true;
                 }
             }
         });
@@ -197,7 +199,7 @@ public class MainActivity extends Activity {
 
         public long pause(){
             cancel();
-            currentPlayer.isPaused=true;
+            //currentPlayer.isPaused=true;
             return currentPlayer.realTime;
         }
     }
