@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/ChessClockPro.iml" filepath="$PROJECT_DIR$/ChessClockPro.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Chess_Clock_Pro.iml" filepath="$PROJECT_DIR$/Chess_Clock_Pro.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>
