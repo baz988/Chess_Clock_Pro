@@ -1,6 +1,7 @@
 package com.oneq.baz.chessclockpro;
 
 import android.app.Activity;
+import android.content.pm.ActivityInfo;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -23,7 +24,11 @@ public class MainActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_main);
+
+        //Disable screen rotation until a fix can be implemented
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_NOSENSOR);
 
         //setup white player
         white = new Player();
@@ -73,6 +78,7 @@ public class MainActivity extends Activity {
                     }
                     black.isPaused=true;
                 }
+
             }
         });
 
@@ -90,6 +96,7 @@ public class MainActivity extends Activity {
                         timerPause(black);
                         black.isPaused = false;
                     }
+
                 }
             }
         });
@@ -192,14 +199,12 @@ public class MainActivity extends Activity {
             black.isPaused=true;
             outOfTime=true;
 
-
             mediaPlayer = MediaPlayer.create(MainActivity.this, R.raw.beep3);
             mediaPlayer.start();
         }
 
         public long pause(){
             cancel();
-            //currentPlayer.isPaused=true;
             return currentPlayer.realTime;
         }
     }
