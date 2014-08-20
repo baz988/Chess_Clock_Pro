@@ -17,13 +17,20 @@ public class MainActivity extends Activity {
     ImageButton pauseButton;
     ImageButton resetButton;
     MediaPlayer mediaPlayer;
-    long TIME_CONTROL = 300000;
-    int INTERVAL = 1000;
+    long TIME_CONTROL = 3000;
+    int INTERVAL = 100;
     boolean outOfTime = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        /*
+        if( savedInstanceState != null ) {
+            black.gameStartTime = savedInstanceState.getLong("BLACK");
+            white.gameStartTime = savedInstanceState.getLong("WHITE");
+        }
+        */
 
         setContentView(R.layout.activity_main);
 
@@ -78,7 +85,6 @@ public class MainActivity extends Activity {
                     }
                     black.isPaused=true;
                 }
-
             }
         });
 
@@ -122,10 +128,8 @@ public class MainActivity extends Activity {
 
                 white.isPaused = false;
                 black.isPaused = false;
-
             }
         });
-
     }
 
     //METHODS
@@ -142,11 +146,15 @@ public class MainActivity extends Activity {
     }
 
     public String convertTime(long time){
+
+        String formatted=null;
+
+        //convert milliseconds into hours. Remove hours, and convert remaining time into minutes, etc
         long hours = TimeUnit.MILLISECONDS.toHours(time);
         long minutes = TimeUnit.MILLISECONDS.toMinutes(time) - TimeUnit.HOURS.toMinutes(hours);
         long seconds = TimeUnit.MILLISECONDS.toSeconds(time) - TimeUnit.MINUTES.toSeconds(minutes) - TimeUnit.HOURS.toSeconds(hours);
-
-        String formatted=null;
+        long milliseconds = time - TimeUnit.SECONDS.toMillis(seconds)
+                - TimeUnit.MINUTES.toMillis(minutes) - TimeUnit.HOURS.toMillis(hours);
 
         if(hours>0 && hours<=9){
             formatted = String.format("%d:%02d:%02d", hours, minutes, seconds);
@@ -161,14 +169,14 @@ public class MainActivity extends Activity {
         }
         else if (hours==0 && minutes==0 && seconds>0){
             if(seconds>9){
-                formatted = String.format("%02d", seconds);
+                formatted = String.format("%02d.%02d", seconds, milliseconds/10);
             }
             else if(seconds>0 && seconds<=9) {
-                formatted = String.format("%d", seconds);
+                formatted = String.format("%d.%02d", seconds, milliseconds/10);
             }
         }
         else{
-            formatted = String.format("%02d:%02d:%02d", hours, minutes, seconds);
+            formatted = String.format("%2d:%02d", minutes, seconds);
         }
 
         return formatted;
@@ -236,6 +244,19 @@ public class MainActivity extends Activity {
             black.isPaused = false;
         }
     }
+
+    /*
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        super.onSaveInstanceState(savedInstanceState);
+
+        timerPause(white);
+        timerPause(black);
+
+        savedInstanceState.putLong("WHITE", white.gameStartTime);
+        savedInstanceState.putLong("BLACK", black.gameStartTime);
+    }
+    */
 }
 
 
