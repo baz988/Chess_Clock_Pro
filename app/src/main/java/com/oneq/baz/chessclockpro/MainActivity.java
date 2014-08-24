@@ -244,19 +244,6 @@ public class MainActivity extends Activity {
             black.isPaused = false;
         }
     }
-
-    /*
-    @Override
-    public void onSaveInstanceState(Bundle savedInstanceState) {
-        super.onSaveInstanceState(savedInstanceState);
-
-        timerPause(white);
-        timerPause(black);
-
-        savedInstanceState.putLong("WHITE", white.gameStartTime);
-        savedInstanceState.putLong("BLACK", black.gameStartTime);
-    }
-    */
 }
 
 
