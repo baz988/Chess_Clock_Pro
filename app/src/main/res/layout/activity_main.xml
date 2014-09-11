@@ -22,7 +22,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:background="@android:color/transparent">
+        android:background="#000000">
 
         <ImageButton
             android:layout_width="match_parent"
@@ -30,7 +30,7 @@
             android:id="@+id/pauseButton"
             android:src="@drawable/ic_action_pause"
             android:layout_weight="1"
-            android:background="#878787"/>
+            android:background="#000000"/>
 
         <ImageButton
             android:layout_width="match_parent"
@@ -38,7 +38,7 @@
             android:id="@+id/resetButton"
             android:src="@drawable/ic_action_replay"
             android:layout_weight="1"
-            android:background="#878787"/>
+            android:background="#000000"/>
 
     </LinearLayout>
 
@@ -49,9 +49,11 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:id="@+id/textViewA"
         android:textSize="100sp"
-        android:drawableTop="#000000"
+        android:drawableTop="#ffffff"
         android:clickable="true"
-        android:gravity="center" />
+        android:gravity="center"
+        android:background="#000000"
+        android:textColor="#ffffff"/>
 
 </LinearLayout>
 
