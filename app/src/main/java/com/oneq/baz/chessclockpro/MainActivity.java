@@ -10,7 +10,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import java.util.concurrent.TimeUnit;
 
-public class MainActivity extends Activity {
+public class    MainActivity extends Activity {
 
     Player white;
     Player black;
@@ -23,6 +23,8 @@ public class MainActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+
         super.onCreate(savedInstanceState);
 
         /*
@@ -33,6 +35,11 @@ public class MainActivity extends Activity {
         */
 
         setContentView(R.layout.activity_main);
+
+        //ADD FONT TO TEXTVIEW A
+        Typeface tf = Typeface.createFromAsset(getAssets(),"fonts/digital-7.regular.ttf");
+        TextView tv = (TextView) findViewById(R.id.textViewA);
+        tv.setTypeface(tf);
 
         //Disable screen rotation until a fix can be implemented
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_NOSENSOR);
@@ -130,6 +137,8 @@ public class MainActivity extends Activity {
                 black.isPaused = false;
             }
         });
+
+
     }
 
     //METHODS
@@ -244,6 +253,9 @@ public class MainActivity extends Activity {
             black.isPaused = false;
         }
     }
+
+
 }
+
 
 
