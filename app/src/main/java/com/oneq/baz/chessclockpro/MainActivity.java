@@ -1,6 +1,7 @@
 package com.oneq.baz.chessclockpro;
 
-import android.app.Activity;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 import android.content.pm.ActivityInfo;
 import android.graphics.Typeface;
 import android.media.MediaPlayer;
@@ -9,16 +10,19 @@ import android.os.CountDownTimer;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
+
 import java.util.concurrent.TimeUnit;
 
-public class    MainActivity extends Activity {
+public class MainActivity extends FragmentActivity {
+
 
     Player white;
     Player black;
     ImageButton pauseButton;
     ImageButton resetButton;
     MediaPlayer mediaPlayer;
-    long TIME_CONTROL = 3000;
+
+    long TIME_CONTROL = 30000;
     int INTERVAL = 100;
     boolean outOfTime = false;
 
@@ -27,13 +31,6 @@ public class    MainActivity extends Activity {
 
 
         super.onCreate(savedInstanceState);
-
-        /*
-        if( savedInstanceState != null ) {
-            black.gameStartTime = savedInstanceState.getLong("BLACK");
-            white.gameStartTime = savedInstanceState.getLong("WHITE");
-        }
-        */
 
         setContentView(R.layout.activity_main);
 
@@ -56,8 +53,8 @@ public class    MainActivity extends Activity {
         black = new Player();
         black.gameTimer = new GameTimer(black);
         black.textField = (TextView) findViewById(R.id.textViewB);
+        black.textField.setTypeface(tf);
         black.textField.setText(convertTime(TIME_CONTROL));
-
 
         //pause and reset buttons
         pauseButton = (ImageButton) findViewById(R.id.pauseButton);
@@ -72,7 +69,7 @@ public class    MainActivity extends Activity {
             public void onClick(View view) {
                 if (!white.isPaused) {
                     timerLogic(black);
-                    if (white.moveCounter >1) {
+                    if (white.moveCounter >0) {
                         timerPause(white);
                     }
                     white.isPaused=true;
@@ -89,11 +86,30 @@ public class    MainActivity extends Activity {
             public void onClick(View view) {
                 if (!black.isPaused) {
                     timerLogic(white);
-                    if (black.moveCounter >1) {
+                    if (black.moveCounter > 0) {
                         timerPause(black);
                     }
                     black.isPaused=true;
                 }
+            }
+        });
+
+        //handle long clicks
+        white.textField.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                //pause the clocks before initiating the longClick
+                if (white.moveCounter > 0) {
+                    timerPause(white);
+                    white.isPaused = false;
+                }
+                if (black.moveCounter > 0) {
+                    timerPause(black);
+                    black.isPaused = false;
+                }
+
+                showTimeControlFragment();
+                return true;
             }
         });
 
@@ -103,11 +119,11 @@ public class    MainActivity extends Activity {
             @Override
             public void onClick(View view) {
                 if (!outOfTime) {
-                    if (white.moveCounter > 1) {
+                    if (white.moveCounter > 0) {
                         timerPause(white);
                         white.isPaused = false;
                     }
-                    if (black.moveCounter > 1) {
+                    if (black.moveCounter > 0) {
                         timerPause(black);
                         black.isPaused = false;
                     }
@@ -117,17 +133,16 @@ public class    MainActivity extends Activity {
         });
 
         //reset button will set both the clocks to Time_Control
-        /**
-         * Need to add a moveCounter reset
-         */
         resetButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 white.realTime = TIME_CONTROL;
                 timerPause(white);
+                white.moveCounter = -1;
 
                 black.realTime = TIME_CONTROL;
                 timerPause(black);
+                black.moveCounter = -1;
 
                 if(outOfTime){
                     mediaPlayer.release();
@@ -144,6 +159,12 @@ public class    MainActivity extends Activity {
     }
 
     //METHODS
+
+    private void showTimeControlFragment(){
+        FragmentManager fm = getSupportFragmentManager();
+        TimeControlFragment timeControlFragment = new TimeControlFragment();
+        timeControlFragment.show(fm, "fragment_edit_name");
+    }
 
     public void timerLogic(Player currentPlayer) {
         currentPlayer.gameTimer = new GameTimer(currentPlayer);
@@ -193,6 +214,25 @@ public class    MainActivity extends Activity {
         return formatted;
     }
 
+    @Override
+    public void onResume(){
+        super.onResume();
+    }
+
+    @Override
+    public void onPause(){
+        super.onPause();
+
+        if (white.moveCounter > 0) {
+            timerPause(white);
+            white.isPaused = false;
+        }
+        if (black.moveCounter > 0) {
+            timerPause(black);
+            black.isPaused = false;
+        }
+    }
+
     //CLASSES
 
     class GameTimer extends CountDownTimer{
@@ -234,30 +274,8 @@ public class    MainActivity extends Activity {
         long gameStartTime = TIME_CONTROL;
         long realTime = 0;
         boolean isPaused = false;
-        int moveCounter=0;
-    }
-
-    @Override
-    public void onResume(){
-        super.onResume();
-    }
-
-    @Override
-    public void onPause(){
-        super.onPause();
-
-        if (white.moveCounter > 1) {
-            timerPause(white);
-            white.isPaused = false;
-        }
-        if (black.moveCounter > 1) {
-            timerPause(black);
-            black.isPaused = false;
-        }
+        int moveCounter=-1;
     }
 
 
 }
-
-
-
