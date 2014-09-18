@@ -1,8 +1,10 @@
 package com.oneq.baz.chessclockpro;
 
+import android.app.Activity;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.content.pm.ActivityInfo;
+import android.graphics.Typeface;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -12,11 +14,8 @@ import android.widget.TextView;
 
 import java.util.concurrent.TimeUnit;
 
-<<<<<<< HEAD
-public class    MainActivity extends Activity {
-=======
 public class MainActivity extends FragmentActivity {
->>>>>>> c16ca9325acdf9c1d356f7480dc649f65d1923d9
+
 
     Player white;
     Player black;
@@ -37,9 +36,9 @@ public class MainActivity extends FragmentActivity {
         setContentView(R.layout.activity_main);
 
         //ADD FONT TO TEXTVIEW A
-        Typeface tf = Typeface.createFromAsset(getAssets(),"fonts/digital-7.regular.ttf");
-        TextView tv = (TextView) findViewById(R.id.textViewA);
-        tv.setTypeface(tf);
+        Typeface tf = Typeface.createFromAsset(getAssets(), "fonts/digital-7.ttf");
+        //TextView tv = (TextView) findViewById(R.id.textViewA);
+        //tv.setTypeface(tf);
 
         //Disable screen rotation until a fix can be implemented
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_NOSENSOR);
@@ -48,12 +47,14 @@ public class MainActivity extends FragmentActivity {
         white = new Player();
         white.gameTimer = new GameTimer(white);
         white.textField = (TextView) findViewById(R.id.textViewA);
+        white.textField.setTypeface(tf);
         white.textField.setText(convertTime(TIME_CONTROL));
 
         //setup black player
         black = new Player();
         black.gameTimer = new GameTimer(black);
         black.textField = (TextView) findViewById(R.id.textViewB);
+        black.textField.setTypeface(tf);
         black.textField.setText(convertTime(TIME_CONTROL));
 
         //pause and reset buttons
@@ -276,12 +277,4 @@ public class MainActivity extends FragmentActivity {
         boolean isPaused = false;
         int moveCounter=-1;
     }
-
-
 }
-
-<<<<<<< HEAD
-
-
-=======
->>>>>>> c16ca9325acdf9c1d356f7480dc649f65d1923d9
