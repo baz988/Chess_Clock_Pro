@@ -12,7 +12,11 @@ import android.widget.TextView;
 
 import java.util.concurrent.TimeUnit;
 
+<<<<<<< HEAD
 public class MainActivity extends FragmentActivity {
+=======
+public class    MainActivity extends Activity {
+>>>>>>> efb59af0524016ed75c0deb7a56552aef390b8f2
 
     Player white;
     Player black;
@@ -26,9 +30,16 @@ public class MainActivity extends FragmentActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
+
+        //ADD FONT TO TEXTVIEW A
+        Typeface tf = Typeface.createFromAsset(getAssets(),"fonts/digital-7.regular.ttf");
+        TextView tv = (TextView) findViewById(R.id.textViewA);
+        tv.setTypeface(tf);
 
         //Disable screen rotation until a fix can be implemented
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_NOSENSOR);
@@ -143,6 +154,8 @@ public class MainActivity extends FragmentActivity {
                 black.isPaused = false;
             }
         });
+
+
     }
 
     //METHODS
@@ -263,5 +276,12 @@ public class MainActivity extends FragmentActivity {
         boolean isPaused = false;
         int moveCounter=-1;
     }
+
+
 }
 
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> efb59af0524016ed75c0deb7a56552aef390b8f2
