@@ -119,11 +119,11 @@ public class MainActivity extends FragmentActivity {
             @Override
             public void onClick(View view) {
                 if (!outOfTime) {
-                    if (white.moveCounter > 0) {
+                    if (white.moveCounter >=0) {
                         timerPause(white);
                         white.isPaused = false;
                     }
-                    if (black.moveCounter > 0) {
+                    if (black.moveCounter >=0) {
                         timerPause(black);
                         black.isPaused = false;
                     }
