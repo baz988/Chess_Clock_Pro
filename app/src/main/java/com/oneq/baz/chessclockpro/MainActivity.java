@@ -13,11 +13,8 @@ import android.widget.TextView;
 
 import java.util.concurrent.TimeUnit;
 
-<<<<<<< HEAD
 public class MainActivity extends FragmentActivity {
-=======
-public class    MainActivity extends Activity {
->>>>>>> efb59af0524016ed75c0deb7a56552aef390b8f2
+
 
     Player white;
     Player black;
@@ -282,9 +279,3 @@ public class    MainActivity extends Activity {
 
 
 }
-
-<<<<<<< HEAD
-=======
-
-
->>>>>>> efb59af0524016ed75c0deb7a56552aef390b8f2
