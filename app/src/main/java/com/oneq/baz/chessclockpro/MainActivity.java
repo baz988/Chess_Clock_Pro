@@ -69,7 +69,7 @@ public class MainActivity extends FragmentActivity {
             public void onClick(View view) {
                 if (!white.isPaused) {
                     timerLogic(black);
-                    if (white.moveCounter >0) {
+                    if (white.moveCounter > 0) {
                         timerPause(white);
                     }
                     white.isPaused=true;
@@ -119,11 +119,11 @@ public class MainActivity extends FragmentActivity {
             @Override
             public void onClick(View view) {
                 if (!outOfTime) {
-                    if (white.moveCounter >=0) {
+                    if (white.moveCounter > 0) {
                         timerPause(white);
                         white.isPaused = false;
                     }
-                    if (black.moveCounter >=0) {
+                    if (black.moveCounter > 0) {
                         timerPause(black);
                         black.isPaused = false;
                     }
@@ -138,11 +138,11 @@ public class MainActivity extends FragmentActivity {
             public void onClick(View view) {
                 white.realTime = TIME_CONTROL;
                 timerPause(white);
-                white.moveCounter = -1;
+                white.moveCounter = 0;
 
                 black.realTime = TIME_CONTROL;
                 timerPause(black);
-                black.moveCounter = -1;
+                black.moveCounter = 0;
 
                 if(outOfTime){
                     mediaPlayer.release();
