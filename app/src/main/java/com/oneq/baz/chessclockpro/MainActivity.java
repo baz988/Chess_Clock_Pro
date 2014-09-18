@@ -2,6 +2,7 @@ package com.oneq.baz.chessclockpro;
 
 import android.app.Activity;
 import android.content.pm.ActivityInfo;
+import android.graphics.Typeface;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -37,9 +38,9 @@ public class    MainActivity extends Activity {
         setContentView(R.layout.activity_main);
 
         //ADD FONT TO TEXTVIEW A
-        Typeface tf = Typeface.createFromAsset(getAssets(),"fonts/digital-7.regular.ttf");
-        TextView tv = (TextView) findViewById(R.id.textViewA);
-        tv.setTypeface(tf);
+        Typeface tf = Typeface.createFromAsset(getAssets(), "fonts/digital-7.ttf");
+        //TextView tv = (TextView) findViewById(R.id.textViewA);
+        //tv.setTypeface(tf);
 
         //Disable screen rotation until a fix can be implemented
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_NOSENSOR);
@@ -48,6 +49,7 @@ public class    MainActivity extends Activity {
         white = new Player();
         white.gameTimer = new GameTimer(white);
         white.textField = (TextView) findViewById(R.id.textViewA);
+        white.textField.setTypeface(tf);
         white.textField.setText(convertTime(TIME_CONTROL));
 
         //setup black player
