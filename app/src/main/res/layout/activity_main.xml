@@ -49,11 +49,14 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:id="@+id/textViewA"
         android:textSize="100sp"
-        android:drawableTop="#ffffff"
+
         android:clickable="true"
         android:gravity="center"
         android:background="#000000"
-        android:textColor="#ffffff"/>
+        android:textColor="#ffffff"
+        />
+
+    <!--android:drawableTop="#ffffff" -->
 
 </LinearLayout>
 
