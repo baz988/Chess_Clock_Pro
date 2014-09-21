@@ -13,7 +13,7 @@ import android.widget.TextView;
 
 import java.util.concurrent.TimeUnit;
 
-public class MainActivity extends FragmentActivity {
+public class MainActivity extends FragmentActivity implements TimeControlFragment.OnTimeControlSelectedListener {
 
 
     Player white;
@@ -34,10 +34,8 @@ public class MainActivity extends FragmentActivity {
 
         setContentView(R.layout.activity_main);
 
-        //ADD FONT TO TEXTVIEW A
+        //Create Typeface
         Typeface tf = Typeface.createFromAsset(getAssets(), "fonts/digital-7.ttf");
-        //TextView tv = (TextView) findViewById(R.id.textViewA);
-        //tv.setTypeface(tf);
 
         //Disable screen rotation until a fix can be implemented
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_NOSENSOR);
@@ -136,29 +134,22 @@ public class MainActivity extends FragmentActivity {
         resetButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                white.realTime = TIME_CONTROL;
-                timerPause(white);
-                white.moveCounter = 0;
-
-                black.realTime = TIME_CONTROL;
-                timerPause(black);
-                black.moveCounter = 0;
-
-                if(outOfTime){
-                    mediaPlayer.release();
-                    mediaPlayer = null;
-                    outOfTime=false;
-                }
-
-                white.isPaused = false;
-                black.isPaused = false;
+                resetTimer();
             }
         });
 
 
     }
 
+
+
     //METHODS
+
+    public void onTimeControlSelected(long newTimeControl){
+       TIME_CONTROL = newTimeControl;
+        resetTimer();
+
+    }
 
     private void showTimeControlFragment(){
         FragmentManager fm = getSupportFragmentManager();
@@ -175,6 +166,25 @@ public class MainActivity extends FragmentActivity {
     public void timerPause(Player currentPlayer){
         currentPlayer.gameStartTime = currentPlayer.gameTimer.pause();
         currentPlayer.textField.setText("" + convertTime(currentPlayer.gameStartTime));
+    }
+
+    private void resetTimer() {
+        white.realTime = TIME_CONTROL;
+        timerPause(white);
+        white.moveCounter = 0;
+
+        black.realTime = TIME_CONTROL;
+        timerPause(black);
+        black.moveCounter = 0;
+
+        if(outOfTime){
+            mediaPlayer.release();
+            mediaPlayer = null;
+            outOfTime=false;
+        }
+
+        white.isPaused = false;
+        black.isPaused = false;
     }
 
     public String convertTime(long time){
