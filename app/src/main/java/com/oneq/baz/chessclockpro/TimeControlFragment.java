@@ -18,38 +18,29 @@ import android.widget.Toast;
  */
 public class TimeControlFragment extends DialogFragment {
 
-    private Button positiveButton;
-    private Button negativeButton;
     private RadioGroup radioGroup;
     private int bullet_ID;
     private int blitz_ID;
     private int game30_ID;
     private int game60_ID;
     private int selected_ID;
-    private long mNewTimeControl;
+    OnTimeControlSelectedListener mCallback;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_timecontrol, container);
 
-        positiveButton = (Button) view.findViewById(R.id.pos);
-        negativeButton = (Button) view.findViewById(R.id.neg);
+        //local vars
+        Button positiveButton = (Button) view.findViewById(R.id.pos);
+        Button negativeButton = (Button) view.findViewById(R.id.neg);
         getDialog().setTitle("Time Control");
-
         radioGroup = (RadioGroup) view.findViewById(R.id.TimeControlSettings);
-        /*
-        bulletRadio = (RadioButton) view.findViewById(R.id.bulletButton);
-        blitzRadio = (RadioButton) view.findViewById(R.id.blitzButton);
-        game30Radio = (RadioButton) view.findViewById(R.id.game30Button);
-        game60Radio = (RadioButton) view.findViewById(R.id.game60Button);
-        */
-
         bullet_ID = R.id.bulletButton;
         blitz_ID = R.id.blitzButton;
         game30_ID = R.id.game30Button;
         game60_ID = R.id.game60Button;
 
-
+        //dismiss dialog if cancel is hit
         negativeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -57,6 +48,7 @@ public class TimeControlFragment extends DialogFragment {
             }
         });
 
+        //after selecting new time control, call the interface to return data to activity
         positiveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -75,27 +67,24 @@ public class TimeControlFragment extends DialogFragment {
                 }
                 else
                     Toast.makeText(getActivity(), "Please select a new time control, or press Cancel", Toast.LENGTH_LONG).show();
-
-
-
             }
         });
 
         return view;
     }
 
-    private void returnNewTimeControl(int timeInMilli) {
-        mNewTimeControl = timeInMilli;
-        mCallback.onTimeControlSelected(mNewTimeControl);
-        getDialog().dismiss();
-    }
-
-    OnTimeControlSelectedListener mCallback;
-
+    //interface to communicate with calling activity
     public interface OnTimeControlSelectedListener{
         public void onTimeControlSelected(long timeInMilli);
     }
 
+    //uses interface to pass new value back to calling activity
+    private void returnNewTimeControl(int timeInMilli) {
+        mCallback.onTimeControlSelected(timeInMilli);
+        getDialog().dismiss();
+    }
+
+    //attaches interface to calling activity
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
@@ -109,6 +98,5 @@ public class TimeControlFragment extends DialogFragment {
                     + " must implement OnHeadlineSelectedListener");
         }
     }
-
 
 }

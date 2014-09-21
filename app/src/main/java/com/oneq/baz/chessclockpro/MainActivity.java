@@ -22,13 +22,12 @@ public class MainActivity extends FragmentActivity implements TimeControlFragmen
     ImageButton resetButton;
     MediaPlayer mediaPlayer;
 
-    long TIME_CONTROL = 30000;
+    long TIME_CONTROL = 300000;
     int INTERVAL = 100;
     boolean outOfTime = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
 
         super.onCreate(savedInstanceState);
 
@@ -141,33 +140,35 @@ public class MainActivity extends FragmentActivity implements TimeControlFragmen
 
     }
 
-
-
     //METHODS
 
+    //receives data from TimeControlFragment via interface
     public void onTimeControlSelected(long newTimeControl){
        TIME_CONTROL = newTimeControl;
         resetTimer();
-
     }
 
+    //creates and shows TimeControlFragment
     private void showTimeControlFragment(){
         FragmentManager fm = getSupportFragmentManager();
         TimeControlFragment timeControlFragment = new TimeControlFragment();
         timeControlFragment.show(fm, "fragment_edit_name");
     }
 
+    //starts timer for player
     public void timerLogic(Player currentPlayer) {
         currentPlayer.gameTimer = new GameTimer(currentPlayer);
         currentPlayer.gameTimer.start();
         currentPlayer.isPaused = false;
     }
 
+    //pauses timer for player
     public void timerPause(Player currentPlayer){
         currentPlayer.gameStartTime = currentPlayer.gameTimer.pause();
         currentPlayer.textField.setText("" + convertTime(currentPlayer.gameStartTime));
     }
 
+    //resets timer
     private void resetTimer() {
         white.realTime = TIME_CONTROL;
         timerPause(white);
@@ -187,6 +188,7 @@ public class MainActivity extends FragmentActivity implements TimeControlFragmen
         black.isPaused = false;
     }
 
+    //converts time from milliseconds to user friendly format
     public String convertTime(long time){
 
         String formatted=null;
@@ -286,6 +288,5 @@ public class MainActivity extends FragmentActivity implements TimeControlFragmen
         boolean isPaused = false;
         int moveCounter=-1;
     }
-
 
 }
