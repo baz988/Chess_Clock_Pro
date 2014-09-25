@@ -35,6 +35,14 @@
         <ImageButton
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:id="@+id/settingsButton"
+            android:src="@drawable/ic_action_settings"
+            android:layout_weight="1"
+            android:background="#000000"/>
+
+        <ImageButton
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:id="@+id/resetButton"
             android:src="@drawable/ic_action_replay"
             android:layout_weight="1"
